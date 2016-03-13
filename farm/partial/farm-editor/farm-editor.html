@@ -1,23 +1,206 @@
-<div class="col-md-12" ng-controller="FarmEditorCtrl">
-    <h1>Edit Farm Info</h1>
+<div class="col-md-12" id="farm-editor" ng-controller="FarmEditorCtrl">
+    <h1>General Information</h1>
     <form>
-        <div class="form-group" uib-tooltip="State the specific ranch, risk unit, block, or field name, as identified in GeoTracker, for which you are reporting total nitrogen applied.">
-            <label for="farm-name" tooltip="test">Farm Name</label>
-            <input type="text" class="form-control" id="farm-name" ng-model="farm.name" >
+        <div class="form-group" uib-tooltip="Provide the ranch global identification number that is assigned to the ranch. The ranch global ID can be found on the upper right corner of the specific ranch eNOI in GeoTracker. Example, Global ID: AGL020013962.Provide the AW identification number that is assigned to your operation.">
+            <label for="farm-aw#">AW#</label>
+            <input type="text" class="form-control" id="farm-aw#" ng-model="farm.AWnumber">
         </div>
-        <div class="form-group" uib-tooltip="Provide the AW identification number that is assigned to your operation.">
-            <label for="farm-id">AW# </label>
-            <input type="text" class="form-control" id="farm-id" ng-model="farm.awNumber">
-        </div>
+
         <div class="form-group" uib-tooltip="Provide the ranch global identification number that is assigned to the ranch. The ranch global ID can be found on the upper right corner of the specific ranch eNOI in GeoTracker. Example, Global ID: AGL020013962.">
             <label for="farm-rid">Ranch Global ID</label>
             <input type="text" class="form-control" id="farm-rid" ng-model="farm.ranchGlobalId">
         </div>
+
+        <div class="form-group" uib-tooltip="State the specific ranch, risk unit, block, or field name, as identified in GeoTracker, for which you are reporting total nitrogen applied.">
+            <label for="farm-ranchname">Ranch Name</label>
+            <input type="text" class="form-control" id="farm-ranchname" ng-model="farm.ranchName">
+        </div>
+
+        <div class="form-group" uib-tooltip="Report the total acreage for which you are reporting total nitrogen applied. The acres could represent the entire ranch, individual risk units, block, or field. Modify the reporting acreage to include only those acres that were farmed during the reporting period, if not all acres were under crop production. You may modify the reporting acreage specifically in cases where only part of the required acreage has been farmed and where the rest of the acres were in fallow, without receiving any type of irrigation and no nitrogen applications. If, on the other hand, part of the acreage was under cover crops, then the reporting acreage must include the acres with cover crops, even if no nitrogen applications were made to the cover crops. Cover crops should be selected in the Specific Crops Grown dropdown menu, and the cover crop acreage should be provided.">
+            <label for="farm-totalacreage">Physical Acres Reporting</label>
+            <input type="text" class="form-control" id="farm-totalacreage" ng-model="farm.totalAcreage">
+        </div>
     </form>
 
-    <button class="btn btn-default"  ng-click="addParcel()">
-        <span class="fa fa-plus" aria-hidden="true"></span>
-        <span>Add Parcel Number</span>
-    </button>
+    <h2>Counties and Parcels</h2>
+    <form>
+        <div class="form-group" ng-repeat="county in farm.counties" uib-tooltip="Select the county or counties where the physical acres reporting are located. Note: If acreages are located in more than one county, report all other counties and APNs on the second page of the form.">
+            <label for="farm-county{{$index}}">County #{{$index+1}}</label>
+            <select class="form-control" id="farm-county{{$index}}" ng-options="countyName for countyName in countyChoices" ng-model="county.name"> </select>
+            <div ng-repeat="apn in county.apns track by $index" class="parcel">
+                <label for="farm-county-apn{{$index}}"> Parcel #{{$index+1}}</label>
+                <input type="text" class="form-control" id="farm-county-apn{{$index}}" ng-model="apn.id">
+                <button class="btn btn-warning" ng-click="county.apns.splice($index, 1)">
+                    <span class="fa fa-times" aria-hidden="true"></span>
+                </button>
+            </div>
 
+            <div class="button-holder">
+                <button class="btn btn-default" ng-click="addParcel(county)">
+                    <span class="fa fa-plus" aria-hidden="true"></span>
+                    <span>Add Parcel</span>
+                </button>
+                <button class="btn btn-danger" ng-click="farm.counties.splice($index, 1)">
+                    <span class="fa fa-times" aria-hidden="true"></span>
+                    <span>Delete County</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="button-holder">
+            <button class="btn btn-default" ng-click="addCounty()">
+                <span class="fa fa-plus" aria-hidden="true"></span>
+                <span>Add County</span>
+            </button>
+        </div>
+    </form>
+
+    <h2>Nitrogen Info</h2>
+    <form>
+        <div class="form-group" uib-tooltip="Report the average nitrate concentration in the irrigation water used on this ranch, risk unit, block, or field. This number should include the amount of nitrate naturally dissolved in the irrigation water as it is pumped out of the ground, or delivered to your ranch, block or field by the irrigation district, water agency, etc. This number should not include liquid fertilizers applied during fertigation. To report the average nitrate concentration you must obtain a laboratory analysis or utilize a portable measuring device that results in a discrete numeric result for nitrate concentration from the primary source of irrigation water applied to the ranch/risk unit, during the reporting period. For more accurate reporting, operators may also measure the nitrate concentration from the other sources of irrigation water applied, besides the primary source of irrigation water, to the ranch/risk unit, during the reporting period. In the case that more than one well is used to irrigate, each well�s average annual concentration and volume applied could be measured to obtain the weighted averages. Therefore, if more than one irrigation source is used, the weighted averages could be reported instead of information from only the primary source of irrigation water. Note 1: A discrete measurement is required for the primary source of irrigation water applied. However, any methodology, such as nitrate quick test, can be used to measure the concentration of all other sources of irrigation water applied, e.g. backup wells. Note 2: mg/L = ppm.">
+            <label for="water-nitrate">Average Nitrate Concentration in Irrigation Water (mg/L)</label>
+            <input type="number" class="form-control" id="water-nitrate" ng-model="farm.waterNitrate" ng-change="calcWaterNitrogen()">
+        </div >
+
+        <div class="form-group" uib-tooltip="Select the proper units you are using to report the irrigation water nitrate concentration. Nitrate as Nitrate (commonly shown as NO3 in laboratory reports) or Nitrate as Nitrogen (commonly shown as N, NO3-N, or NO3NO2N in laboratory reports).">
+            <label>Irrigation nitrogen as NO3 or Nitrogen</label>
+            <br>
+            <input type="radio" name="NO3orN" ng-model="farm.NO3orN" value="Yes">NO3 (nitrate)
+            <br>
+            <input type="radio" name="NO3orN" ng-model="farm.NO3orN" value="Off">N (nitrogen)
+            <br>
+        </div>
+
+        <div class="form-group" uib-tooltip="This field is used to auto-calculate the next box titled Total Nitrogen Applied with Irrigation Water. Enter the total gallons applied to the entire reporting acreage during the September 1st to August 31st reporting period (or throughout an approved modified reporting period, if applicable). The Total Volume of Irrigation Water Applied should include any water applied for leaching and all recycled water. Note: rain water should not be included.">
+            <label for="water-volume">Estimated Total Volume of Irrigation Water Applied to Entire Reporting Acres During Reporting Period (gallons)</label>
+            <input type="number" class="form-control" id="water-volume" ng-model="farm.volWater" ng-change="calcWaterNitrogen()">
+        </div>
+
+        <div class="form-group" uib-tooltip="Calculate and report the total nitrogen applied with irrigation water or auto-calculate based on previously entered fields. The information must be reported as the total pounds of nitrogen applied to each acre of the ranch, risk unit, or block/field. To report the amount of nitrogen applied with irrigation water (to all the crops grown on the ranch or risk unit during the reporting period), the following information must be known: 1. The average nitrate concentration in the primary source of irrigation water, or the weighted average of nitrate concentration in the irrigation water applied, if more than one well is used for irrigation. 2. Total volume of irrigation water applied (to all the crops grown on the ranch, risk unit or block/field during the reporting period). To calculate the total amount of nitrogen applied with irrigation water in lbs/acre, in cases where more than one water source is used to irrigate crops in the ranch/risk unit or block/field, the volume of water applied from each source should be accurately measured. The Nitrogen Applied with Irrigation Water can be manually calculated by following the steps outlined in the example described on pages 9 and 10. To auto-calculate, enter the total volume of irrigation water applied, in gallons (previous box) to the entire ranch, risk unit or block/field (reporting acres). Note: This value corresponds to the pounds of nitrogen applied to each acre of the ranch/risk unit or block/field (physical-acre).">
+            <label for="total-irrigation-nitrogen">Total Nitrogen Applied with Irrigation Water (lbs/ac)</label>
+            <input type="number" class="form-control" id="total-irrigation-nitrogen" ng-model="farm.totalIrrigationNitrate">
+        </div>
+
+        <div class="form-group" uib-tooltip="Report the total number of ranch, risk unit, or block/field acres (physical-acres) where nitrogen applications from compost and amendments were made.">
+            <label for="compost-acres">Physical Acres Receiving Compost & Amendments</label>
+            <input type="number" class="form-control" id="compost-acres" ng-model="farm.compostAcres">
+        </div>
+
+        <div class="form-group" uib-tooltip="Report in this section the total number of pounds of nitrogen applied from compost, amendments, and all other nitrogen containing materials (such as compost teas, humic acids, bacterial extracts, soil enhancers, but NOT including fertilizers, which must be reported in Section IV) if the applications were: 1. Applied to improve the soil physical and/or chemical properties (increase organic matter, improve structure or moisture retention), and usually applied when there are no crops growing on the ground, or 2. Intended for multiple crops, so the nitrogen would be distributed to many crops and the nitrogen is not already distributed among all the crops and reported in section IV. Note 1: Also report in this section all other applications of nitrogen that are not reported in section IV. Note 2: In the case where multiple applications are made during the year, sum the applications and report the total applied nitrogen in pounds. Note 3: Make sure the value reported from the compost and amendment applications is converted from pounds or tons of the gross material to pounds of nitrogen.">
+            <label for="compost-pounds">Nitrogen Applied in Compost & Amendments (total lbs)</label>
+            <input type="number" class="form-control" id="compost-pounds" ng-model="farm.compostPounds">
+        </div>
+    </form>
+
+    <h2>Data Basis</h2>
+    <form class="check-form">
+        <div >
+            <label for="farm-unidota">University Research Data</label>
+            <input type="checkbox" id="farm-unidota" ng-model="farm.uniRschDta">
+        </div>
+
+        <div>
+            <label for="farm-conslt">Consultant (PCA, CCA, etc.)</label>
+            <input type="checkbox" id="farm-conslt" ng-model="farm.consltPC">
+        </div>
+
+        <div>
+            <label for="farm-commindygp">Commodity or Industry Group</label>
+            <input type="checkbox" id="farm-commindygp" ng-model="farm.commIndstyGp">
+        </div>
+
+        <div>
+            <label for="farm-trdpub">Trade Publication</label>
+            <input type="checkbox" id="farm-trdpub" ng-model="farm.trdePub">
+        </div>
+
+        <div>
+            <label for="farm-labremmd">Laboratory Recommendation</label>
+            <input type="checkbox" id="farm-labremmd" ng-model="farm.labRecmmd">
+        </div>
+
+        <div>
+            <label for="farm-ucceinfo">UCCE Information</label>
+            <input type="checkbox" id="farm-ucceinfo" ng-model="farm.ucceInfo">
+        </div>
+
+        <div>
+            <label for="farm-lclinfo">Local Info/Neighbor</label>
+            <input type="checkbox" id="farm-lclinfo" ng-model="farm.lclInfoNbr">
+        </div>
+
+        <div>
+            <label for="farm-privrchtl">Private Research Trials</label>
+            <input type="checkbox" id="farm-privrchtl" ng-model="farm.prvtRschTls">
+        </div>
+
+        <div>
+            <label for="farm-firtdist">Fertilizer Distributor/Dealer</label>
+            <input type="checkbox" id="farm-firtdist" ng-model="farm.fertDistDeal">
+        </div>
+
+        <div>
+            <label for="farm-steana">Site Analysis Dry Biomass</label>
+            <input type="checkbox" id="farm-steana" ng-model="farm.siteAnalDryBioass">
+        </div>
+
+        <div>
+            <label for="farm-yproj">UC Farm Advisor Consultation</label>
+            <input type="checkbox" id="farm-yproj" ng-model="farm.advsiorConsult">
+        </div>
+
+        <div>
+            <label for="farm-frt">On-Farm Research Trials</label>
+            <input type="checkbox" id="farm-frt" ng-model="farm.fReaTrial">
+        </div>
+
+        <div>
+            <label for="farm-grwrexp">Grower Experience</label>
+            <input type="checkbox" id="farm-grwrexp" ng-model="farm.grorExp">
+        </div>
+
+        <div>
+            <label for="farm-scilit">Scientific Literature</label>
+            <input type="checkbox" id="farm-scilit" ng-model="farm.scitfcLit">
+        </div>
+    </form>
+
+    <h2>Contact and Comments</h2>
+    <form>
+        <div class="form-group" uib-tooltip="If the information on this form does not represent the entire 12-month repeating period, please provide a brief explanation..">
+            <label for="farm-explainplz">Explanation & Comments</label>
+            <textarea class="form-control" id="farm-explainplz" ng-model="farm.explComm"></textarea>
+        </div>
+
+        <div class="form-group" uib-tooltip="If YES, include an attachment that identifies the specific section(s) In this Total Nitrogen Appled where proprietary information is contained and provide detailed and specific justification. Note that checking YES to the question above and providing details and specific justification does not guarantee the information will not be disclosed; Regional Board staff must review the claim of proprietary information and justification and make a determination as to whether the informtion is proprietary and can be withheld from disclosures in a Public Records Act request..">
+            <label>Does this form contain info related to trade secrets or secret processes?</label>
+            <br>
+            <input type="radio" name="YorN" value="Yes" ng-model="hasTradeSecret">No
+            <br>
+            <input type="radio" name="YorN" value="Off" ng-model="hasTradeSecret">Yes
+            <br>
+        </div>
+
+        <div class="form-group" uib-tooltip="Provide the name of the operator/responsible party and the preparer of the report, the preparer title, the preparer contact information, and the date prepared. The preparer and the operator/responsible party, should be knowledgeable and
+         understand the ranch/risk unit specifics regarding the total nitrogen applied and present in the soil for the selected reporting period. Both the preparer and the operator/responsible party should be available to respond to questions from Water Board staff. The operator/responsible party, as listed on the operation’s eNOI, must review the report prior to submittal.">
+            <label for="farm-oname">Operator/Responsible Party</label>
+            <input type="text" class="form-control" id="farm-oname" ng-model="farm.opName">
+        </div>
+
+        <div class="form-group" uib-tooltip="Provide the name of the operator/responsible party and the preparer of the report, the preparer title, the preparer contact information, and the date prepared. The preparer and the operator/responsible party, should be knowledgeable and understand the ranch/risk unit specifics regarding the total nitrogen applied and present in the soil for the selected reporting period. Both the preparer and the
+        operator/responsible party should be available to respond to questions from Water Board staff. The operator/responsible party, as listed on the operation’s eNOI, must review the report prior to submittal..">
+            <label for="farm-pname">Preparer Name</label>
+            <input type="text" class="form-control" id="farm-pname" ng-model="farm.prepName">
+        </div>
+
+        <div class="form-group">
+            <label for="farm-preptitle">Preparer Title</label>
+            <input type="text" class="form-control" id="farm-preptitle" ng-model="farm.pTitle">
+        </div>
+
+        <div class="form-group">
+            <label for="farm-cntctinfo">Contact Info (email address and/or phone number)</label>
+            <input type="text" class="form-control" id="farm-cntctinfo" ng-model="farm.contactInfo">
+        </div>
+    </form>
 </div>

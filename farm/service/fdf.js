@@ -1,38 +1,30 @@
 angular.module('farm').factory('fdf', function($http) {
 	var template;
-	$http.get('/form-mini.xml').then(function(contents) {
-		console.log(contents);
-		template = jQuery.parseXML(contents);
-		template.log(contents);
+	$http.get('/form-mini.xfdf').then(function(contents) {
+		template = jQuery.parseXML(contents.data);
+		window.template = template;
 	});
 	var fdf = {};
-	var fieldRegex = /T\(([^\)]*)\)(?:\/V\(([^\)]*)\))?/g;
 
-	var getAllMatches = function(input, regex) {
-		var matches, output = [];
-		while (matches = regex.exec(input)) {
-			output.push(matches);
+	fdf.addFeild = function(key, value) {
+		var fields = $(template).find('fields');
+		fields.append('<field name="' +key + '"><value >' + value + '</value ></field >');
+	};
+
+	fdf.addFields = function(map) {
+		for (var key in map) {
+			fdf.addFeild(key, map[key]);
 		}
-		return output;
+
 	};
 
-	fdf.getFields = function() {
-		var makeObject = function(input, regex) {
-			var matches, output = {};
-			while (matches = regex.exec(input)) {
-				output[matches[1]] = matches[2];
-			}
-			return output;
-		};
-
-		return makeObject(template, fieldRegex);
-	};
-
+	var serializer = new XMLSerializer();
 	fdf.download = function() {
-		var blob = new Blob([template], {
-			type: "text/plain;charset=utf-8"
+		var content = serializer.serializeToString(window.template),
+			blob = new Blob([content], {
+			type: "text/xml;charset=utf-8"
 		});
-		window.saveAs(blob, "report.fdf");
+		window.saveAs(blob, "report.xfdf");
 	};
 
 

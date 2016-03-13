@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xfdf xmlns="http://ns.adobe.com/xfdf/" xml:space="preserve"
-><f href="tna_form12102015.pdf"
+><f href="form.pdf"
 /><fields
 ><field name="1"
 ><value
@@ -263,9 +263,9 @@ Chard, Swiss</value
 ></field
 ><field name="CropCol2"
 ><value
->Cherry	
-Chicory	
-Chile	
+>Cherry
+Chicory
+Chile
 Chinese Greens (A Choy)
 Chinese Greens (Bok Choy)
 Chinese Greens (Bok Choy, Baby)
@@ -274,25 +274,25 @@ Chinese Greens (Gai Choy)
 Chinese Greens (Gai Lan)
 Chinese Greens (On Choy)
 Chinese Greens (Tong Ho)
-Chives	
-Cilantro	
+Chives
+Cilantro
 Collard Greens
-Corn	
+Corn
 Corn, Sweet
 Cover Crop, Legume
 Cover Crop, Non-Legume
 Cress
 Cucumber
 Daikon
-Dandelion Greens	
-Dill	
-Eggplant	
-Endive	
-Escarole	
+Dandelion Greens
+Dill
+Eggplant
+Endive
+Escarole
 Fallow
-Fennel	
-Flowers	
-Frisee	
+Fennel
+Flowers
+Frisee
 Garlic
 Grapes, Table
 Grapes, Wine
@@ -702,7 +702,7 @@ Other - Contact Water Board
 ></field
 ><field name="Volume Note"
 ><value
->For auto-calculation of Nitrogen Applied with Irrigation Water. This field is not required. 
+>For auto-calculation of Nitrogen Applied with Irrigation Water. This field is not required.
 Use the spreadsheet                                                   for converting acre-feet or acre-inches to gallons.</value
 ></field
 ><field name="Water N Load Title"
