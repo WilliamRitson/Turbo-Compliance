@@ -1,0 +1,41 @@
+<div class="col-md-12" ng-controller="BlockCtrl">
+    <h1>Block Editor</h1>
+    <form>
+        <div class="form-group">
+            <label for="block-name">Block Name</label>
+            <input type="text" class="form-control" id="block-name"  ng-model="block.name">
+        </div>
+        <h3>General</h3>
+
+        <div class="form-group">
+            <label for="block-crop">Crop</label>
+            <select  class="form-control"  id="block-crop" ng-model="block.cropType" ng-options = "crop for crop in cropTypes"></select>
+        </div>
+        <div class="form-group">
+            <label for="block-acres">Acres</label>
+            <input type="number" class="form-control" id="block-acres" ng-model="block.acres">
+        </div>
+
+        <h3>Water</h3>
+        <div class="form-group">
+            <label for="block-water">Water (gallons)</label>
+            <input type="number" class="form-control" id="block-water"  ng-model="block.waterUsage" >
+        </div>
+        <h3>Nitrogen</h3>
+        <div class="form-group">
+            <label for="block-soil-nitrogen">Nitrogen in Soil (lbs/ac)</label>
+            <input type="number" class="form-control" id="block-soil-nitrogen"  ng-model="block.soilNitrogen">
+        </div>
+
+        <div class="form-group">
+            <label for="block-dissolved-nitrogen">Dissolved Nitrogen in Water (mg/L)</label>
+            <input type="number" class="form-control" id="block-dissolved-nitrogen"  ng-model="block.nitrogenConcentration">
+        </div>
+
+        <div class="form-group">
+            <label for="block-nitrogen">Solid Nitrogen (pounds)</label>
+            <input type="number" class="form-control" id="block-nitrogen"  ng-model="block.solidNitrogen">
+        </div>
+
+    </form>
+</div>

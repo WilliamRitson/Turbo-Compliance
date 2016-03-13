@@ -1,0 +1,43 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Turbo Compliance</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="#/farm">Farm Info</a></li>
+                <li class="dropdown">
+                    <a href="#/home" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blocks <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat ="(key, val) in blocks"><a ng-href="#/block/{{key}}">{{val.name}}</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li ng-click="addBlock()"><a>
+                            <span class="fa fa-plus"></span>
+                            <span>New Block</span>
+                        </a></li>
+                    </ul>
+                </li>
+                <li><a href="#/report">Generate Report</a></li>
+
+            </ul>
+            <form class="navbar-form navbar-right" show-auth>
+                <button class="btn btn-success" ng-click="save()">
+                    <span class="fa fa-floppy-o"></span>
+                    <span>Save</span>
+                </button>
+            </form>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+
+    <!-- /.container-fluid -->
+</nav>

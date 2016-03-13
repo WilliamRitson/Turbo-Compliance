@@ -1,0 +1,29 @@
+<div class="col-md-12" ng-controller="ReportBuilderCtrl">
+
+    <h2>Calculated Values</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Crop</th>
+                <th>Total Area (Acers)</th>
+                <th>Nitrogen Present in Soil (lb/ac)</th>
+                <th>Nitrogen Added to Soil (lb/ac)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="crop in crops">
+                <td>{{crop.crop}}</td>
+                <td>{{crop.acres}}</td>
+                <td>{{crop.soilNitrogen}}</td>
+                <td>{{crop.addedNitrogen}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button class="btn btn-default"  ng-click="download()">
+        <span class="fa fa-download" aria-hidden="true"></span>
+        <span>Download</span>
+    </button>
+
+
+</div>

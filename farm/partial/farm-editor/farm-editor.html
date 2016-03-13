@@ -1,0 +1,23 @@
+<div class="col-md-12" ng-controller="FarmEditorCtrl">
+    <h1>Edit Farm Info</h1>
+    <form>
+        <div class="form-group" uib-tooltip="State the specific ranch, risk unit, block, or field name, as identified in GeoTracker, for which you are reporting total nitrogen applied.">
+            <label for="farm-name" tooltip="test">Farm Name</label>
+            <input type="text" class="form-control" id="farm-name" ng-model="farm.name" >
+        </div>
+        <div class="form-group" uib-tooltip="Provide the AW identification number that is assigned to your operation.">
+            <label for="farm-id">AW# </label>
+            <input type="text" class="form-control" id="farm-id" ng-model="farm.awNumber">
+        </div>
+        <div class="form-group" uib-tooltip="Provide the ranch global identification number that is assigned to the ranch. The ranch global ID can be found on the upper right corner of the specific ranch eNOI in GeoTracker. Example, Global ID: AGL020013962.">
+            <label for="farm-rid">Ranch Global ID</label>
+            <input type="text" class="form-control" id="farm-rid" ng-model="farm.ranchGlobalId">
+        </div>
+    </form>
+
+    <button class="btn btn-default"  ng-click="addParcel()">
+        <span class="fa fa-plus" aria-hidden="true"></span>
+        <span>Add Parcel Number</span>
+    </button>
+
+</div>
