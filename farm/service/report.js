@@ -2,6 +2,18 @@ angular.module('farm').factory('report', function(data, fdf) {
 
 	var report = {};
 
+	var clean = function (map){
+		for (var prop in map) {
+			if (typeof map[prop] === 'boolean') {
+				map[prop] = map[prop] ? 'Yes' : 'off';
+			}
+			if (map[prop] === undefined || map[prop] === null ) {
+				delete map[prop];
+			}
+		}
+		return map;
+	};
+
 	var translate = function(farm) {
 		var map = {
 			'AW_Num': farm.AWnumber,
@@ -33,14 +45,7 @@ angular.module('farm').factory('report', function(data, fdf) {
 			'PreparerTitle': farm.pTitle,
 			'ContactInfo': farm.contactInfo,
 		};
-		for (var prop in map) {
-			if (map[prop] === undefined || map[prop] === null ) {
-				delete map[prop];
-			}
-			if (prop.indexOf('box') !== -1) {
-				map[prop] = map[prop] ? 'Yes' : 'off';
-			}
-		}
+
 		return map;
 	};
 
@@ -76,10 +81,10 @@ angular.module('farm').factory('report', function(data, fdf) {
 
 	report.buildEithOr = function(farm) {
 		var map = {};
-		map.NO3 = farm.NO3orN ? 'Yes' : 'off';
-		map.N = !farm.NO3orN ? 'Yes' : 'off';
-		map.TradeSecretYes = farm.hasTradeSecret ? 'Yes' : 'off';
-		map.TradeSecretYes = !farm.hasTradeSecret ? 'Yes' : 'off';
+		map.NO3 = farm.NO3orN;
+		map.N = !farm.NO3orN;
+		map.TradeSecretYes = farm.hasTradeSecret;
+		map.TradeSecretYes = !farm.hasTradeSecret;
 		return map;
 	};
 
@@ -102,28 +107,37 @@ angular.module('farm').factory('report', function(data, fdf) {
 		acres: 'a',
 		soilNitrogen: 's',
 		addedNitrogen: 'f',
+		organic: 'o',
+		yeildReaserch:'r'
 	};
-	report.buildCollumns = function(crops) {
+	report.buildCollumns = function(crops, metadata) {
 		var map = {};
+		console.log('meta', metadata);
 		for (var i = 0; i < crops.length; i += 1) {
+			console.log(crops[i].crop, metadata[crops[i].crop]);
+			crops[i].organic = metadata[crops[i].crop].organic ? 'O' : 'C';
+			crops[i].yeildReaserch = metadata[crops[i].crop].yeildReaserch ? 'R' : 'NY';
+		}
+		for (i = 0; i < crops.length; i += 1) {
 			for (var prop in colMap) {
 				map[colMap[prop] + (i + 1)] = crops[i][prop];
 			}
 		}
+		console.log(map);
 		return map;
 	};
 
-	report.makeReport = function(farm, crops) {
+	report.makeReport = function(farm, crops, cropsMetadata) {
 		var fields = {};
 		_.assign(fields,
 			translate(farm),
-			report.buildCollumns(crops),
-			report.buildCounties(farm.counties),
+			report.buildCollumns(crops, cropsMetadata),
+			report.buildCounties(farm.counties || []),
 			report.buildEithOr(farm)
 		);
 		fields.DatePrepared = moment().format('l');
-		console.log(fields);
-		fdf.addFields(fields);
+		console.log(clean(fields));
+		fdf.addFields(clean(fields));
 		fdf.download();
 	};
 	return report;

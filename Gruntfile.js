@@ -105,7 +105,7 @@ module.exports = function(grunt) {
 			main: {
 				files: [
 					{
-						src: ['form-mini.xfdf'],
+						src: ['form-mini.xfdf', 'form.pdf'],
 						dest: 'dist/'
 					},
 					{

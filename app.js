@@ -2,6 +2,7 @@ angular.module('TurboCompliance', ['ui.bootstrap', 'ui.utils', 'ngRoute', 'ngAni
 
 angular.module('TurboCompliance').config(function($routeProvider) {
 
+    $routeProvider.when('/home',{templateUrl: 'partial/home/home.html'});
     /* Add New Routes Above */
     $routeProvider.otherwise({redirectTo:'/home'});
 

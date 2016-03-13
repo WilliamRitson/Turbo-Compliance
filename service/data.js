@@ -6,11 +6,14 @@ angular.module('TurboCompliance').factory('data', function() {
 
 	data.blocks = {};
 
+	data.crops = {};
+
 	var lsId = 'tc-data';
 	data.save = function() {
 		window.localStorage.setItem(lsId, JSON.stringify({
 			farm: data.farm,
-			blocks: data.blocks
+			blocks: data.blocks,
+			crops: data.crops
 		}));
 	};
 
@@ -19,8 +22,21 @@ angular.module('TurboCompliance').factory('data', function() {
 		if (newData === null) {
 			return;
 		}
-		data.farm = newData.farm;
-		data.blocks = newData.blocks;
+		data.farm = newData.farm || {};
+		data.blocks = newData.blocks || {};
+		data.crops = newData.crops || {};
+	};
+
+	data.export = function() {
+		var content = JSON.stringify({
+				farm: data.farm,
+				blocks: data.blocks,
+				crops: data.crops
+			}),
+			blob = new Blob([content], {
+				type: "text/json;charset=utf-8"
+			});
+		window.saveAs(blob, "form-data.xfdf");
 	};
 
 	data.getFarm = function() {
@@ -36,7 +52,7 @@ angular.module('TurboCompliance').factory('data', function() {
 		return data.blocks[id];
 	};
 
-	data.getBlockIds = function () {
+	data.getBlockIds = function() {
 		return _.keys(data.blocks);
 	};
 

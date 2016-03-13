@@ -15,7 +15,6 @@ angular.module('farm').factory('fdf', function($http) {
 		for (var key in map) {
 			fdf.addFeild(key, map[key]);
 		}
-
 	};
 
 	var serializer = new XMLSerializer();
@@ -24,7 +23,7 @@ angular.module('farm').factory('fdf', function($http) {
 			blob = new Blob([content], {
 			type: "text/xml;charset=utf-8"
 		});
-		window.saveAs(blob, "report.xfdf");
+		window.saveAs(blob, "form-data.xfdf");
 	};
 
 

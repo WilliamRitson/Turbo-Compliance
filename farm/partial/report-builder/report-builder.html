@@ -8,6 +8,8 @@
                 <th>Total Area (Acers)</th>
                 <th>Nitrogen Present in Soil (lb/ac)</th>
                 <th>Nitrogen Added to Soil (lb/ac)</th>
+                <th>Is crop organic?</th>
+                <th>Does yield research exist?</th>
             </tr>
         </thead>
         <tbody>
@@ -16,14 +18,35 @@
                 <td>{{crop.acres}}</td>
                 <td>{{crop.soilNitrogen}}</td>
                 <td>{{crop.addedNitrogen}}</td>
+                <td><input type="checkbox" ng-model="cropsMeta[crop.crop].organic"></td>
+                <td><input type="checkbox" ng-model="cropsMeta[crop.crop].yeildReaserch"></td>
             </tr>
         </tbody>
     </table>
 
-    <button class="btn btn-default"  ng-click="download()">
+
+    <a href="form.pdf" download="form.pdf">
+
+    <button class="btn btn-default">
         <span class="fa fa-download" aria-hidden="true"></span>
-        <span>Download</span>
+        <span>Download PDF</span>
     </button>
+    </a>
+
+    <button class="btn btn-default" ng-click="download()">
+        <span class="fa fa-download" aria-hidden="true"></span>
+        <span>Download XFDF</span>
+    </button>
+
+<h2> Instructions</h2>
+    <ol>
+    <li>Configure your information in the farm menu</li>
+    <li>Set up the data for each individual block of crop in the blocks menu</li>
+    <li>Download the form.pdf document. Do not change its filename</li>
+    <li>Download the form-data.xfdf and open it in Adobe Reader</li>
+    <li>Adobe reader may ask for permission to modify the pdf. Accept the dialog, and the yellow bar at the top of the screen. </li>
+    <li>Open the PDF and verify the information is correct. Then check the box on the last line to sign it. </li>
+</ol>
 
 
 </div>
